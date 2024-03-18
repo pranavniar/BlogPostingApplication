@@ -15,6 +15,7 @@ import useWindowSize from "./hooks/useWindowSize";
 import useAxiosFetch from "./hooks/useAxiosFetch";
 
 //This is the main App component
+//new branch
 function App() {
   const [posts, setPosts] = useState([]);
   const [search, setSearch] = useState("");

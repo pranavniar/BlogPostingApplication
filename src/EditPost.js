@@ -1,14 +1,36 @@
 import { useParams, Link } from "react-router-dom";
-import { useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import DataContext from "./context/dataContext";
+import api from "./api/posts";
+import { useHistory } from "react-router-dom";
 
-const EditPost = ({
-  posts,
-  editedTitle,
-  setEditedTitle,
-  editedBody,
-  setEditedBody,
-  handleEdit,
-}) => {
+const EditPost = () => {
+  const [editedTitle, setEditedTitle] = useState("");
+  const [editedBody, setEditedBody] = useState("");
+
+  const { posts, setPosts } = useContext(DataContext);
+
+  const history = useHistory();
+  const handleEdit = async (id) => {
+    try {
+      const editedPost = {
+        title: editedTitle,
+        body: editedBody,
+      };
+      const result = await api.put(`/posts/${id}`, editedPost);
+      const updatedPosts = posts.map((post) => {
+        if (post.id === id) {
+          return result.data;
+        }
+        return post;
+      });
+      setPosts(updatedPosts);
+      history.push("/");
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
+
   const { id } = useParams();
   const postToEdit = posts.find((post) => post.id.toString() === id);
   useEffect(() => {
